@@ -27,7 +27,8 @@
     "@tinkoff/invest-openapi-js-sdk": "^1.2.16",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.6.3",
+    "yenv": "^3.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.5.1",
