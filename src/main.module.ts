@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppModule } from "./Modules/App/app.module";
+import { TinkoffModule } from "./Modules/Tinkoff/tinkoff.module";
 
 @Module({
   imports: [
-    AppModule
+    AppModule,
+    TinkoffModule
   ],
   controllers: [],
   providers: [],
