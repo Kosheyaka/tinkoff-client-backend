@@ -1,2 +1,8 @@
+### Получение брокерских счетов клиента
+GET http://localhost:3000/tinkoff/userAccounts
+Accept: application/json
+
+### Регистрация клиента в sandbox
 POST http://localhost:3000/tinkoff/registerSandbox
 Accept: application/json
+
