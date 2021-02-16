@@ -1,9 +1,9 @@
 import { Controller, Get, Post } from "@nestjs/common";
-import { TinkoffService } from "./tinkoff.service";
+import { TinkoffApi } from "./tinkoffApi";
 
 @Controller('tinkoff')
 export class TinkoffController {
-  constructor(private service: TinkoffService) {}
+  constructor(private service: TinkoffApi) {}
 
   @Get('userAccounts')
   async userAccounts() {

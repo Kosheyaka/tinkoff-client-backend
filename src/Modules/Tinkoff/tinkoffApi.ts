@@ -7,7 +7,7 @@ import {
 import { app } from "../../main";
 import { PortfolioResponse } from "@tinkoff/invest-openapi-js-sdk/build/domain";
 
-export class TinkoffService {
+export class TinkoffApi {
   constructor() {
     this.api = axios.create({
       baseURL: app.config.tinkoff.apiUrl,

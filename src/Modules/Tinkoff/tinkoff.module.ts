@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TinkoffController } from './tinkoff.controller';
-import { TinkoffService } from "./tinkoff.service";
+import { TinkoffApi } from "./tinkoffApi";
 
 @Module({
   imports: [],
   controllers: [TinkoffController],
-  providers: [TinkoffService],
+  providers: [TinkoffApi],
 })
 export class TinkoffModule {}
