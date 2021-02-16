@@ -1,22 +1,26 @@
 import { Controller, Get, Post } from "@nestjs/common";
 import { TinkoffApi } from "./api/tinkoff.api";
+import { TinkoffSandboxApi } from "./api/tinkoffSandbox.api";
 
 @Controller('tinkoff')
 export class TinkoffController {
-  constructor(private service: TinkoffApi) {}
+  constructor(
+    private api: TinkoffApi,
+    private sandbox: TinkoffSandboxApi,
+  ) {}
 
-  @Get('userAccounts')
-  async userAccounts() {
-    return this.service.getUserAccounts();
+  @Post('registerSandbox')
+  async registerSandbox() {
+    return this.sandbox.postSandboxRegister();
   }
 
   @Get('portfolio')
   async portfolio() {
-    return this.service.getPortfolio();
+    return this.api.getPortfolio();
   }
 
-  @Post('registerSandbox')
-  async registerSandbox() {
-    return this.service.postSandboxRegister();
+  @Get('userAccounts')
+  async userAccounts() {
+    return this.api.getUserAccounts();
   }
 }
