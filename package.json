@@ -25,9 +25,11 @@
     "@nestjs/core": "^7.5.1",
     "@nestjs/platform-express": "^7.5.1",
     "@tinkoff/invest-openapi-js-sdk": "^1.2.16",
+    "class-validator": "^0.13.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
+    "yaml": "^1.10.0",
     "yenv": "^3.0.0"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.6",
     "@types/supertest": "^2.0.10",
+    "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
     "eslint": "^7.12.1",
