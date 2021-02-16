@@ -1,30 +1,16 @@
-import axios, { AxiosInstance } from "axios";
 import {
   BrokerAccountType,
   UserAccountsResponse,
   SandboxRegisterResponse,
 } from "@tinkoff/invest-openapi-js-sdk";
-import { app } from "../../main";
 import { PortfolioResponse } from "@tinkoff/invest-openapi-js-sdk/build/domain";
+import { TinkoffApiAbstract } from "./tinkoff.api.abs";
 
-export class TinkoffApi {
+export class TinkoffSandboxApi extends TinkoffApiAbstract {
   constructor() {
-    this.api = axios.create({
-      baseURL: app.config.tinkoff.apiUrl,
-      headers: {
-        authorization: `Bearer ${app.config.tinkoff.secretToken}`,
-      },
-    });
-    this.sandboxApi = axios.create({
-      baseURL: app.config.tinkoff.apiUrlSandbox,
-      headers: {
-        authorization: `Bearer ${app.config.tinkoff.sandboxToken}`,
-      },
-    });
+    super();
+    this.api = this.getAxiosInstance(true);
   }
-
-  private api: AxiosInstance;
-  private sandboxApi: AxiosInstance;
 
   public postSandboxRegister = async (brokerAccountType: BrokerAccountType = "Tinkoff"): Promise<SandboxRegisterResponse> => {
     try {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TinkoffController } from './tinkoff.controller';
-import { TinkoffApi } from "./tinkoffApi";
+import { TinkoffApi } from "./api/tinkoff.api";
 
 @Module({
   imports: [],

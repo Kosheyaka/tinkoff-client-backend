@@ -1,5 +1,5 @@
 import { Controller, Get, Post } from "@nestjs/common";
-import { TinkoffApi } from "./tinkoffApi";
+import { TinkoffApi } from "./api/tinkoff.api";
 
 @Controller('tinkoff')
 export class TinkoffController {
