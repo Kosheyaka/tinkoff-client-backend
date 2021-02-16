@@ -10,6 +10,11 @@ export class TinkoffController {
     return this.service.getUserAccounts();
   }
 
+  @Get('portfolio')
+  async portfolio() {
+    return this.service.getPortfolio();
+  }
+
   @Post('registerSandbox')
   async registerSandbox() {
     return this.service.postSandboxRegister();

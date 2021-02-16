@@ -5,6 +5,7 @@ import {
   SandboxRegisterResponse,
 } from "@tinkoff/invest-openapi-js-sdk";
 import { app } from "../../main";
+import { PortfolioResponse } from "@tinkoff/invest-openapi-js-sdk/build/domain";
 
 export class TinkoffService {
   constructor() {
@@ -27,7 +28,7 @@ export class TinkoffService {
 
   public postSandboxRegister = async (brokerAccountType: BrokerAccountType = "Tinkoff"): Promise<SandboxRegisterResponse> => {
     try {
-      const { data } = await this.sandboxApi.post('/sandbox/register', { brokerAccountType });
+      const { data } = await this.api.post('/sandbox/register', { brokerAccountType });
       return data as SandboxRegisterResponse;
     } catch (e) {
       console.error(e.message);
@@ -36,8 +37,17 @@ export class TinkoffService {
 
   public getUserAccounts = async (): Promise<UserAccountsResponse> => {
     try {
-      const { data } = await this.sandboxApi.get('/user/accounts');
+      const { data } = await this.api.get('/user/accounts');
       return data as UserAccountsResponse;
+    } catch (e) {
+      console.error(e.message);
+    }
+  };
+
+  public getPortfolio = async (): Promise<PortfolioResponse> => {
+    try {
+      const { data } = await this.api.get('/portfolio');
+      return data as PortfolioResponse;
     } catch (e) {
       console.error(e.message);
     }
