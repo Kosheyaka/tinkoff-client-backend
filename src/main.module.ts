@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppModule } from "./Modules/App/app.module";
+import { TestModule } from "./Modules/Test/test.module";
 import { TinkoffModule } from "./Modules/Tinkoff/tinkoff.module";
 
 @Module({
   imports: [
-    AppModule,
+    TestModule,
     TinkoffModule
   ],
   controllers: [],
