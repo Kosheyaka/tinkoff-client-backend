@@ -21,6 +21,11 @@ export class TinkoffService {
 
   private api: TinkoffApiAbstract;
 
+  private wrapMoney = (money: number) => Math.round(money * 100) / 100;
+
+  public arraySum = (arr: number[]): number =>
+    arr.reduce((prev, curr) => this.wrapMoney(prev + this.wrapMoney(curr)), 0.00);
+
   public sandbox = (flag: boolean): void => {
     this.api = !flag ? this.realApi : this.sandBoxApi;
   };

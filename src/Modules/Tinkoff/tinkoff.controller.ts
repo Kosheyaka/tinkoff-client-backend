@@ -7,13 +7,19 @@ export class TinkoffController {
 
   @Get('test')
   async example() {
-    this.service.sandbox(false);
-    // const brokerAccountId = await this.service.getBrokerAccountId();
-    const figi = await this.service.getFigiByTicker('tsla');
+    // const TeslaCost = 787.38 * 25; // TODO Get actual cost
+    const figi = await this.service.getFigiByTicker('TSLA');
     const operations = await this.service.getFullTransactionsHistory(figi);
+    const doneOperations = operations.filter((o) => o.status === "Done");
+    const acceptedOperations = doneOperations.filter((o) => o.operationType !== "BrokerCommission");
 
-    return [
-      operations[0],
-    ];
+    const commissions = doneOperations.filter((o) => o.operationType === "BrokerCommission");
+    const tradingSum: number = this.service.arraySum(acceptedOperations.map((o) => o.payment));
+    const commissionsSum: number = this.service.arraySum(commissions.map((o) => o.payment));
+
+    return {
+      tradingSum,
+      commissionsSum,
+    };
   }
 }
