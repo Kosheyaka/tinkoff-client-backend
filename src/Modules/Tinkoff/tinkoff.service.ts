@@ -81,4 +81,6 @@ export class TinkoffService {
 
     return lastCandle.c;
   };
+
+  public getTickerIconUrl = (isin: string): string => `https://static.tinkoff.ru/brands/traiding/${isin}x160.png`;
 }
