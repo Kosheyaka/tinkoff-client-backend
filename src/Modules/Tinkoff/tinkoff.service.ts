@@ -70,6 +70,15 @@ export class TinkoffService {
   };
 
   public getTickerActualPrice = async (figi: string): Promise<number> => {
-    return 0;
+    const dateFrom = new Date();
+    dateFrom.setDate(dateFrom.getDate() - 7);
+    const dateTo = new Date();
+    const from = dateFrom.toISOString();
+    const to = dateTo.toISOString();
+
+    const { payload: { candles } } = await this.api.marketCandles({ figi, interval: 'hour', from, to })
+    const lastCandle = candles[candles.length - 1];
+
+    return lastCandle.c;
   };
 }

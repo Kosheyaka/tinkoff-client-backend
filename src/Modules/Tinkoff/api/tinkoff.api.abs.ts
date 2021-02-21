@@ -73,8 +73,12 @@ export abstract class TinkoffApiAbstract {
   };
 
   public marketCandles = async (params: MarketCandlesParams): Promise<CandlesResponse> => {
-    const { data } = await this.api.get('/market/candles', { params });
-    return data as CandlesResponse;
+    try {
+      const { data } = await this.api.get('/market/candles', { params });
+      return data as CandlesResponse;
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   public marketSearchByFigi = async (figi: string): Promise<MarketInstrumentListResponse> => {

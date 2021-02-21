@@ -17,13 +17,13 @@ export class TinkoffController {
   }
 
   @Get('tickerPrice')
-  async tickerPrice(@Query() query: { ticker: string }) {
+  async tickerPrice(@Query() query: { ticker: string }): Promise<number> {
     const { ticker } = query;
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
       throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
     }
 
-    return 0;
+    return this.service.getTickerActualPrice(instrument.figi);
   }
 }
