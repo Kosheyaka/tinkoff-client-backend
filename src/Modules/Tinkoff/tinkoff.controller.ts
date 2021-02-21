@@ -1,25 +1,29 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, NotFoundException, Query } from "@nestjs/common";
 import { TinkoffService } from "./tinkoff.service";
 
 @Controller('tinkoff')
 export class TinkoffController {
   constructor(private service: TinkoffService) {}
 
-  @Get('test')
-  async example() {
-    // const TeslaCost = 787.38 * 25; // TODO Get actual cost
-    const figi = await this.service.getFigiByTicker('TSLA');
-    const operations = await this.service.getFullTransactionsHistory(figi);
-    const doneOperations = operations.filter((o) => o.status === "Done");
-    const acceptedOperations = doneOperations.filter((o) => o.operationType !== "BrokerCommission");
+  @Get('statisticsByTicker')
+  async statisticsByTicker(@Query() query: { ticker: string }) {
+    const { ticker } = query;
+    const instrument = await this.service.getInstrumentByTicker(ticker);
+    if (!instrument) {
+      throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
+    }
 
-    const commissions = doneOperations.filter((o) => o.operationType === "BrokerCommission");
-    const tradingSum: number = this.service.arraySum(acceptedOperations.map((o) => o.payment));
-    const commissionsSum: number = this.service.arraySum(commissions.map((o) => o.payment));
+    return {};
+  }
 
-    return {
-      tradingSum,
-      commissionsSum,
-    };
+  @Get('tickerPrice')
+  async tickerPrice(@Query() query: { ticker: string }) {
+    const { ticker } = query;
+    const instrument = await this.service.getInstrumentByTicker(ticker);
+    if (!instrument) {
+      throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
+    }
+
+    return 0;
   }
 }
