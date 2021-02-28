@@ -110,7 +110,7 @@ export class TinkoffService {
   };
 
   /**
-   * Возвращает ссылку на иконку инструмнта
+   * Возвращает ссылку на иконку инструмента
    * @param isin
    */
   public getTickerIconUrl = (isin: string): string => `https://static.tinkoff.ru/brands/traiding/${isin}x160.png`;
