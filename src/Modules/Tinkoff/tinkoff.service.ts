@@ -15,11 +15,6 @@ export class TinkoffService {
 
   private api: TinkoffApiAbstract;
 
-  private wrapMoney = (money: number) => Math.round(money * 100) / 100;
-
-  public arraySum = (arr: number[]): number =>
-    this.wrapMoney(arr.reduce((prev, curr) => prev + this.wrapMoney(curr), 0.00));
-
   /**
    * Включает/выключает режим песочницы
    * @param flag
