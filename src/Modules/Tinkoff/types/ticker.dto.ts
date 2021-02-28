@@ -1,9 +1,8 @@
-import { IsNotEmpty, IsString, Max, Min } from "class-validator";
+import { IsNotEmpty, IsString, Length } from "class-validator";
 
 export class TickerDto {
   @IsString()
-  @Min(3)
-  @Max(4)
+  @Length(3, 4)
   @IsNotEmpty()
   ticker: string;
 }
