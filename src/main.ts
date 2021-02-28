@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { MainModule } from './main.module';
-import { INestApplication } from "@nestjs/common";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { readFileSync } from "fs";
 import { parse } from "yaml";
 import { MainConfig } from "./main.config";
@@ -18,6 +18,7 @@ class App {
   private loadNest = async (): Promise<void> => {
     this.nestInstance = await NestFactory.create(MainModule);
     this.nestInstance.enableCors();
+    this.nestInstance.useGlobalPipes(new ValidationPipe({ transform: true }));
     await this.nestInstance.listen(3000);
   };
 
