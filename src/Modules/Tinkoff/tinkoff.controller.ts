@@ -7,7 +7,9 @@ export class TinkoffController {
   constructor(private service: TinkoffService) {}
 
   @Get('statisticsByTicker')
-  async statisticsByTicker(@Query() { ticker }: TickerDto) {
+  async statisticsByTicker(
+    @Query() { ticker }: TickerDto
+  ) {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
       throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
@@ -17,8 +19,9 @@ export class TinkoffController {
   }
 
   @Get('tickerPrice')
-  async tickerPrice(@Query() query: TickerDto): Promise<number> {
-    const { ticker } = query;
+  async tickerPrice(
+    @Query() { ticker }: TickerDto
+  ): Promise<number> {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
       throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
@@ -41,7 +44,9 @@ export class TinkoffController {
   }
 
   @Get('tickerIconUrl')
-  async tickerIconUrl(@Query() { ticker }: TickerDto): Promise<string> {
+  async tickerIconUrl(
+    @Query() { ticker }: TickerDto
+  ): Promise<string> {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
       throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
