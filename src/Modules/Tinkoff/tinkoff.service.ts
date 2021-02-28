@@ -20,10 +20,18 @@ export class TinkoffService {
   public arraySum = (arr: number[]): number =>
     this.wrapMoney(arr.reduce((prev, curr) => prev + this.wrapMoney(curr), 0.00));
 
+  /**
+   * Включает/выключает режим песочницы
+   * @param flag
+   */
   public sandboxMode = (flag: boolean): void => {
     this.api = !flag ? this.realApi : this.sandBoxApi;
   };
 
+  /**
+   * Возвращает ID портфеля в системе брокера
+   * @todo Добавить возможность работать с 2 портфелями
+   */
   public getBrokerAccountId = async (): Promise<string> => {
     const { payload: { accounts } } = await this.api.userAccounts();
     const { brokerAccountId } = accounts[0];
@@ -31,12 +39,20 @@ export class TinkoffService {
     return brokerAccountId;
   };
 
+  /**
+   * Получить информацию об инструменте по тикеру (строка из 3-4 букв)
+   * @param ticker
+   */
   public getInstrumentByTicker = async (ticker: string): Promise<MarketInstrument> => {
     const { payload: { instruments } } = await this.api.marketSearchByTicker(ticker);
 
     return instruments[0];
   };
 
+  /**
+   * Получить историю транзакций по определенному инструменту
+   * @param figi
+   */
   public getTransactionsHistoryByFigi = async (figi: string): Promise<Operation[]> => {
     const fromDate = new Date(); fromDate.setFullYear(2015);
     const params = {
@@ -50,6 +66,9 @@ export class TinkoffService {
     return operations;
   };
 
+  /**
+   * Получить полную историю транзакций (с 2015 года)
+   */
   public getTransactionsHistoryFull = async (): Promise<Operation[]> => {
     const fromDate = new Date(); fromDate.setFullYear(2015);
     const params = {
@@ -62,6 +81,10 @@ export class TinkoffService {
     return operations;
   };
 
+  /**
+   * Количество единиц инструмента в портфеле
+   * @param ticker
+   */
   public getTickerAmount = async (ticker: string): Promise<number> => {
     const { payload: { positions } } = await this.api.portfolio();
     const position = positions.find((pos) => pos.ticker === ticker.toUpperCase());
@@ -69,6 +92,10 @@ export class TinkoffService {
     return position ? position.lots : 0;
   };
 
+  /**
+   * Последняя цена инструмента
+   * @param figi
+   */
   public getTickerActualPrice = async (figi: string): Promise<number> => {
     const dateFrom = new Date();
     dateFrom.setDate(dateFrom.getDate() - 7);
@@ -82,5 +109,9 @@ export class TinkoffService {
     return lastCandle.c;
   };
 
+  /**
+   * Возвращает ссылку на иконку инструмнта
+   * @param isin
+   */
   public getTickerIconUrl = (isin: string): string => `https://static.tinkoff.ru/brands/traiding/${isin}x160.png`;
 }
