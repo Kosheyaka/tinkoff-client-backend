@@ -1,4 +1,5 @@
 import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
+import { Cache } from 'cache-manager';
 import { TinkoffApi } from "./api/tinkoff.api";
 import { TinkoffSandboxApi } from "./api/tinkoffSandbox.api";
 import { TinkoffApiAbstract } from "./api/tinkoff.api.abs";
@@ -7,8 +8,8 @@ import { MarketInstrument, Operation, OperationTypeWithCommission } from "@tinko
 @Injectable()
 export class TinkoffService {
   constructor(
-    // @Inject(CACHE_MANAGER)
-    // private cacheManager: Cache,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
     private realApi: TinkoffApi,
     private sandBoxApi: TinkoffSandboxApi,
   ) {
