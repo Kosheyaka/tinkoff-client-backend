@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from "@nestjs/common";
 import { TinkoffController } from './tinkoff.controller';
 import { TinkoffApi } from "./api/tinkoff.api";
 import { TinkoffSandboxApi } from "./api/tinkoffSandbox.api";
 import { TinkoffService } from "./tinkoff.service";
 
 @Module({
-  imports: [],
+  imports: [CacheModule.register()],
   controllers: [TinkoffController],
   providers: [
     TinkoffService,

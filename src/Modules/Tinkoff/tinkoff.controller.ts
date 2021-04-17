@@ -1,10 +1,18 @@
 import { Controller, Get, NotFoundException, Query, Res } from "@nestjs/common";
 import { TinkoffService } from "./tinkoff.service";
 import { TickerDto } from "./types/ticker.dto";
+import { app } from "../../main";
 
 @Controller('tinkoff')
 export class TinkoffController {
   constructor(private service: TinkoffService) {}
+
+  @Get('overview')
+  async overview() {
+    const allTransactions = await this.service.getTransactionsHistoryFull();
+
+    return this.service.getDistinctOperationTypes(allTransactions);
+  }
 
   @Get('statisticsByTicker')
   async statisticsByTicker(

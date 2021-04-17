@@ -1,12 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { CACHE_MANAGER, Inject, Injectable } from "@nestjs/common";
 import { TinkoffApi } from "./api/tinkoff.api";
 import { TinkoffSandboxApi } from "./api/tinkoffSandbox.api";
 import { TinkoffApiAbstract } from "./api/tinkoff.api.abs";
-import { MarketInstrument, Operation } from "@tinkoff/invest-openapi-js-sdk/build/domain";
+import { MarketInstrument, Operation, OperationTypeWithCommission } from "@tinkoff/invest-openapi-js-sdk/build/domain";
 
 @Injectable()
 export class TinkoffService {
   constructor(
+    // @Inject(CACHE_MANAGER)
+    // private cacheManager: Cache,
     private realApi: TinkoffApi,
     private sandBoxApi: TinkoffSandboxApi,
   ) {
@@ -109,4 +111,12 @@ export class TinkoffService {
    * @param isin
    */
   public getTickerIconUrl = (isin: string): string => `https://static.tinkoff.ru/brands/traiding/${isin}x160.png`;
+
+  public getDistinctOperationTypes = (operations: Operation[]): any => {
+    const operationTypes: OperationTypeWithCommission[] = [...new Set(operations.map(o => o.operationType))];
+
+    return {
+      operationTypes,
+    };
+  };
 }
