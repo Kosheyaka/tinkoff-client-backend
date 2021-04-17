@@ -5,7 +5,7 @@ import { TinkoffSandboxApi } from './api/tinkoffSandbox.api';
 import { TinkoffService } from './tinkoff.service';
 
 @Module({
-  imports: [CacheModule.register()],
+  imports: [],
   controllers: [TinkoffController],
   providers: [TinkoffService, TinkoffApi, TinkoffSandboxApi],
 })
