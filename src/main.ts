@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { MainModule } from './main.module';
-import { INestApplication, Logger, ValidationPipe } from "@nestjs/common";
-import { readFileSync } from "fs";
-import { parse } from "yaml";
-import { MainConfig } from "./main.config";
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { parse } from 'yaml';
+import { MainConfig } from './main.config';
 
 class App {
   public config: MainConfig;

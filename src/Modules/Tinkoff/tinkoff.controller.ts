@@ -1,7 +1,6 @@
-import { Controller, Get, NotFoundException, Query, Res } from "@nestjs/common";
-import { TinkoffService } from "./tinkoff.service";
-import { TickerDto } from "./types/ticker.dto";
-import { app } from "../../main";
+import { Controller, Get, NotFoundException, Query, Res } from '@nestjs/common';
+import { TinkoffService } from './tinkoff.service';
+import { TickerDto } from './types/ticker.dto';
 
 @Controller('tinkoff')
 export class TinkoffController {
@@ -15,24 +14,24 @@ export class TinkoffController {
   }
 
   @Get('statisticsByTicker')
-  async statisticsByTicker(
-    @Query() { ticker }: TickerDto
-  ) {
+  async statisticsByTicker(@Query() { ticker }: TickerDto) {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
-      throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
+      throw new NotFoundException(
+        `Не удалось найти инструмент по тикеру ${ticker}`,
+      );
     }
 
     return {};
   }
 
   @Get('tickerPrice')
-  async tickerPrice(
-    @Query() { ticker }: TickerDto
-  ): Promise<number> {
+  async tickerPrice(@Query() { ticker }: TickerDto): Promise<number> {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
-      throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
+      throw new NotFoundException(
+        `Не удалось найти инструмент по тикеру ${ticker}`,
+      );
     }
 
     return this.service.getTickerActualPrice(instrument.figi);
@@ -45,19 +44,21 @@ export class TinkoffController {
   ): Promise<void> {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
-      throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
+      throw new NotFoundException(
+        `Не удалось найти инструмент по тикеру ${ticker}`,
+      );
     }
 
     response.redirect(301, this.service.getTickerIconUrl(instrument.isin));
   }
 
   @Get('tickerIconUrl')
-  async tickerIconUrl(
-    @Query() { ticker }: TickerDto
-  ): Promise<string> {
+  async tickerIconUrl(@Query() { ticker }: TickerDto): Promise<string> {
     const instrument = await this.service.getInstrumentByTicker(ticker);
     if (!instrument) {
-      throw new NotFoundException(`Не удалось найти инструмент по тикеру ${ticker}`);
+      throw new NotFoundException(
+        `Не удалось найти инструмент по тикеру ${ticker}`,
+      );
     }
 
     return this.service.getTickerIconUrl(instrument.isin);

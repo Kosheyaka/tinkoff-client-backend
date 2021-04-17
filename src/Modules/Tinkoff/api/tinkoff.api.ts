@@ -1,4 +1,4 @@
-import { TinkoffApiAbstract } from "./tinkoff.api.abs";
+import { TinkoffApiAbstract } from './tinkoff.api.abs';
 
 export class TinkoffApi extends TinkoffApiAbstract {
   constructor() {

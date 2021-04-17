@@ -1,13 +1,13 @@
-import axios, { AxiosInstance } from "axios";
-import { app } from "../../../main";
-import { UserAccountsResponse } from "@tinkoff/invest-openapi-js-sdk";
+import axios, { AxiosInstance } from 'axios';
+import { app } from '../../../main';
+import { UserAccountsResponse } from '@tinkoff/invest-openapi-js-sdk';
 import {
   CandlesResponse,
   MarketInstrumentListResponse,
   OperationsResponse,
   PortfolioCurrenciesResponse,
-  PortfolioResponse
-} from "@tinkoff/invest-openapi-js-sdk/build/domain";
+  PortfolioResponse,
+} from '@tinkoff/invest-openapi-js-sdk/build/domain';
 
 const MarketCandlesIntervals = [
   '1min',
@@ -28,23 +28,26 @@ interface MarketCandlesParams {
   figi: string;
   from: string;
   to: string;
-  interval: MarketCandlesIntervalType,
+  interval: MarketCandlesIntervalType;
 }
 
 interface OperationsParams {
-  from: string,
-  to: string,
-  figi?: string,
-  brokerAccountId?: string,
+  from: string;
+  to: string;
+  figi?: string;
+  brokerAccountId?: string;
 }
 
 export abstract class TinkoffApiAbstract {
-
   protected api: AxiosInstance;
 
   protected getAxiosInstance = (isSandbox: boolean): AxiosInstance => {
-    const baseURL = isSandbox ? app.config.tinkoff.apiUrlSandbox : app.config.tinkoff.apiUrl;
-    const token = isSandbox ? app.config.tinkoff.sandboxToken : app.config.tinkoff.secretToken;
+    const baseURL = isSandbox
+      ? app.config.tinkoff.apiUrlSandbox
+      : app.config.tinkoff.apiUrl;
+    const token = isSandbox
+      ? app.config.tinkoff.sandboxToken
+      : app.config.tinkoff.secretToken;
     return axios.create({
       baseURL,
       headers: {
@@ -55,13 +58,23 @@ export abstract class TinkoffApiAbstract {
 
   // Portfolio: Операции с портфелем пользователя
 
-  public portfolio = async (brokerAccountId?: string): Promise<PortfolioResponse> => {
-    const { data } = await this.api.get('/portfolio', brokerAccountId ? { params: { brokerAccountId }} : null);
+  public portfolio = async (
+    brokerAccountId?: string,
+  ): Promise<PortfolioResponse> => {
+    const { data } = await this.api.get(
+      '/portfolio',
+      brokerAccountId ? { params: { brokerAccountId } } : null,
+    );
     return data as PortfolioResponse;
   };
 
-  public portfolioCurrencies = async (brokerAccountId?: string): Promise<PortfolioCurrenciesResponse> => {
-    const { data } = await this.api.get('/portfolio/currencies', brokerAccountId ? { params: { brokerAccountId }} : null);
+  public portfolioCurrencies = async (
+    brokerAccountId?: string,
+  ): Promise<PortfolioCurrenciesResponse> => {
+    const { data } = await this.api.get(
+      '/portfolio/currencies',
+      brokerAccountId ? { params: { brokerAccountId } } : null,
+    );
     return data as PortfolioCurrenciesResponse;
   };
 
@@ -72,7 +85,9 @@ export abstract class TinkoffApiAbstract {
     return data as MarketInstrumentListResponse;
   };
 
-  public marketCandles = async (params: MarketCandlesParams): Promise<CandlesResponse> => {
+  public marketCandles = async (
+    params: MarketCandlesParams,
+  ): Promise<CandlesResponse> => {
     try {
       const { data } = await this.api.get('/market/candles', { params });
       return data as CandlesResponse;
@@ -81,27 +96,33 @@ export abstract class TinkoffApiAbstract {
     }
   };
 
-  public marketSearchByFigi = async (figi: string): Promise<MarketInstrumentListResponse> => {
+  public marketSearchByFigi = async (
+    figi: string,
+  ): Promise<MarketInstrumentListResponse> => {
     const { data } = await this.api.get('/market/search/by-figi', {
       params: {
         figi: figi.toUpperCase(),
-      }
+      },
     });
     return data as MarketInstrumentListResponse;
   };
 
-  public marketSearchByTicker = async (ticker: string): Promise<MarketInstrumentListResponse> => {
+  public marketSearchByTicker = async (
+    ticker: string,
+  ): Promise<MarketInstrumentListResponse> => {
     const { data } = await this.api.get('/market/search/by-ticker', {
       params: {
         ticker: ticker.toUpperCase(),
-      }
+      },
     });
     return data as MarketInstrumentListResponse;
   };
 
   // Operations: Получение информации по операциям
 
-  public operations = async (params: OperationsParams): Promise<OperationsResponse> => {
+  public operations = async (
+    params: OperationsParams,
+  ): Promise<OperationsResponse> => {
     const { data } = await this.api.get('/operations', { params });
     return data as OperationsResponse;
   };
@@ -113,4 +134,3 @@ export abstract class TinkoffApiAbstract {
     return data as UserAccountsResponse;
   };
 }
-
