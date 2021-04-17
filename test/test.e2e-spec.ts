@@ -23,11 +23,11 @@ describe('TestController (e2e)', () => {
     done();
   });
 
-  it('/test/cache (GET)', async (done) => {
+  it('/test/query (GET)', async (done) => {
     await request(app.getHttpServer())
-      .get('/test/cache?a=1')
+      .get('/test/query?a=1')
       .expect(200)
-      .expect(JSON.stringify({ a: '1' }));
+      .expect(JSON.stringify({ a: '2' }));
     done();
   });
 });
