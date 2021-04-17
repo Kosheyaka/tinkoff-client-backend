@@ -1,3 +1,0 @@
-### TEST
-GET http://localhost:3000/tinkoff/test
-Accept: application/json

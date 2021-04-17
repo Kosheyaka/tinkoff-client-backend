@@ -1,8 +1,0 @@
-### Получение брокерских счетов клиента
-GET http://localhost:3000/tinkoff/userAccounts
-Accept: application/json
-
-### Получение портфеля клиента
-GET http://localhost:3000/tinkoff/portfolio
-Accept: application/json
-
