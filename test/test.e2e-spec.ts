@@ -15,10 +15,23 @@ describe('TestController (e2e)', () => {
     await app.init();
   });
 
-  it('/test/hello (GET)', () => {
-    return request(app.getHttpServer())
+  it('/test/hello (GET)', async (done) => {
+    await request(app.getHttpServer())
       .get('/test/hello')
       .expect(200)
       .expect('Hello World!');
+    done();
+  });
+
+  afterEach(async () => {
+    // await app.close();
+  });
+
+  it('/test/cache (GET)', async (done) => {
+    await request(app.getHttpServer())
+      .get('/test/cache?a=1')
+      .expect(200)
+      .expect(JSON.stringify({ a: '1' }));
+    done();
   });
 });

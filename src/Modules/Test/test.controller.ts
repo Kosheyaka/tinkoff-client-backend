@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { TestService } from './test.service';
 
 @Controller('test')
@@ -6,7 +6,12 @@ export class TestController {
   constructor(private readonly testService: TestService) {}
 
   @Get('hello')
-  getHello(): string {
+  async getHello(): Promise<string> {
     return this.testService.getHello();
+  }
+
+  @Get('query')
+  async getQuery(@Query() query) {
+    return query;
   }
 }
