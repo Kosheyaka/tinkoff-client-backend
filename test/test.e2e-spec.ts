@@ -23,10 +23,6 @@ describe('TestController (e2e)', () => {
     done();
   });
 
-  afterEach(async () => {
-    // await app.close();
-  });
-
   it('/test/cache (GET)', async (done) => {
     await request(app.getHttpServer())
       .get('/test/cache?a=1')
