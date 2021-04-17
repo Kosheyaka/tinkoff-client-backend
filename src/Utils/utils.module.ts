@@ -5,5 +5,6 @@ import { CacheService } from './cache.service';
   imports: [CacheModule.register()],
   controllers: [],
   providers: [CacheService],
+  exports: [CacheService],
 })
 export class UtilsModule {}

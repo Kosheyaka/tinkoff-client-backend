@@ -27,7 +27,15 @@ describe('TestController (e2e)', () => {
     await request(app.getHttpServer())
       .get('/test/query?a=1')
       .expect(200)
-      .expect(JSON.stringify({ a: '2' }));
+      .expect(JSON.stringify({ a: '1' }));
+    done();
+  });
+
+  it('/test/cache (GET)', async (done) => {
+    await request(app.getHttpServer())
+      .get('/test/cache')
+      .expect(200)
+      .expect(JSON.stringify({ value: true }));
     done();
   });
 });
