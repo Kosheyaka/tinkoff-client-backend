@@ -7,6 +7,7 @@ import {
   Operation,
   OperationTypeWithCommission,
 } from '@tinkoff/invest-openapi-js-sdk';
+import { launchDate } from './tinkoff.const';
 
 @Injectable()
 export class TinkoffService {
@@ -58,14 +59,11 @@ export class TinkoffService {
   public getTransactionsHistoryByFigi = async (
     figi: string,
   ): Promise<Operation[]> => {
-    const fromDate = new Date();
-    fromDate.setFullYear(2015);
-    const params = {
-      from: fromDate.toISOString(),
+    const operationsResponse = await this.api.operations({
+      from: launchDate.toISOString(),
       to: new Date().toISOString(),
       figi,
-    };
-    const operationsResponse = await this.api.operations(params);
+    });
     const {
       payload: { operations },
     } = operationsResponse;
@@ -77,13 +75,10 @@ export class TinkoffService {
    * Получить полную историю транзакций (с 2015 года)
    */
   public getTransactionsHistoryFull = async (): Promise<Operation[]> => {
-    const fromDate = new Date();
-    fromDate.setFullYear(2015);
-    const params = {
-      from: fromDate.toISOString(),
+    const operationsResponse = await this.api.operations({
+      from: launchDate.toISOString(),
       to: new Date().toISOString(),
-    };
-    const operationsResponse = await this.api.operations(params);
+    });
     const {
       payload: { operations },
     } = operationsResponse;
@@ -129,7 +124,7 @@ export class TinkoffService {
   public getTickerIconUrl = (isin: string): string =>
     `https://static.tinkoff.ru/brands/traiding/${isin}x160.png`;
 
-  public getDistinctOperationTypes = (operations: Operation[]): any => {
+  public getDistinctOperationTypes = (operations: Operation[]) => {
     const operationTypes: OperationTypeWithCommission[] = [
       ...new Set(operations.map((o) => o.operationType)),
     ];
