@@ -6,7 +6,7 @@ import {
   MarketInstrument,
   Operation,
   OperationTypeWithCommission,
-} from '@tinkoff/invest-openapi-js-sdk/build/domain';
+} from '@tinkoff/invest-openapi-js-sdk';
 
 @Injectable()
 export class TinkoffService {
