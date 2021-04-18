@@ -5,6 +5,10 @@ import { readFileSync } from 'fs';
 import { parse } from 'yaml';
 import { MainConfig } from './main.config';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const setTZ = require('set-tz');
+setTZ('Europe/Moscow');
+
 class App {
   public config: MainConfig;
 
