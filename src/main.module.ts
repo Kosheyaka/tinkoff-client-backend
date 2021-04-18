@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TestModule } from './Modules/Test/test.module';
+import { DevModule } from './Modules/Dev/dev.module';
 import { TinkoffModule } from './Modules/Tinkoff/tinkoff.module';
 import { UtilsModule } from './Utils/utils.module';
 
 const prodModules = [TinkoffModule, UtilsModule];
-const devModules = [...prodModules, TestModule];
+const devModules = [...prodModules, DevModule];
 
 @Module({
   imports: process.env.NODE_ENV === 'prod' ? prodModules : devModules,
