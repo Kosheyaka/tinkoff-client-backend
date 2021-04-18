@@ -16,7 +16,7 @@ describe('TestController', () => {
     appController = app.get<DevController>(DevController);
   });
 
-  describe('root', () => {
+  describe('getHello', () => {
     it('should return "Hello World!"', async () => {
       expect(await appController.getHello()).toBe('Hello World!');
     });
