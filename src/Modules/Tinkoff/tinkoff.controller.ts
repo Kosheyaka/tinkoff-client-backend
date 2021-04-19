@@ -6,6 +6,11 @@ import { TickerDto } from './types/ticker.dto';
 export class TinkoffController {
   constructor(private service: TinkoffService) {}
 
+  @Get('accounts')
+  async accounts() {
+    return this.service.getBrokerAccounts();
+  }
+
   @Get('usedTickers')
   async usedTickers() {
     // const allTransactions = await this.service.getAllOperations();
