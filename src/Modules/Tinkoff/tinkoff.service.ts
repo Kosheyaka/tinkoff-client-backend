@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TinkoffApi } from './api/tinkoff.api';
 import { CacheService } from '../../Utils/cache.service';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@tinkoff/invest-openapi-js-sdk';
 import { launchDate } from './tinkoff.const';
 import { CacheTTL } from 'src/Utils/const';
+import { sortByKeyASC } from '../../Utils/array.helper';
 
 @Injectable()
 export class TinkoffService {
@@ -53,6 +54,30 @@ export class TinkoffService {
 
     await this.cache.setGlobal<MarketInstrument>(cacheKey, instruments[0]);
     return instruments[0];
+  };
+
+  /**
+   * Получить информацию об инструменте по тикеру (строка из 3-4 букв)
+   */
+  public getInstrumentByFigi = async (
+    figi: string,
+  ): Promise<MarketInstrument> => {
+    const cacheKey = `TS.getInstrumentByFigi.${figi}`;
+    const cache = await this.cache.getGlobal<MarketInstrument>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
+    const { payload: instrument } = await this.api.marketSearchByFigi(figi);
+
+    if (!instrument) {
+      throw new NotFoundException(
+        `Не удалось найти инструмент по figi = ${figi}`,
+      );
+    }
+
+    await this.cache.setGlobal<MarketInstrument>(cacheKey, instrument);
+    return instrument;
   };
 
   /**
@@ -157,6 +182,50 @@ export class TinkoffService {
 
     return {
       operationTypes,
+    };
+  };
+
+  public getUsedInstruments = async (
+    operations: Operation[],
+  ): Promise<MarketInstrument[]> => {
+    const distinctFigiSet = new Set<string>();
+    const manualOperationTypes: OperationTypeWithCommission[] = [
+      'Buy',
+      'Sell',
+      'BuyCard',
+    ];
+
+    operations.forEach(({ operationType, figi }: Operation) => {
+      const isManual = manualOperationTypes.includes(operationType);
+      if (!isManual) {
+        return;
+      }
+
+      distinctFigiSet.add(figi);
+    });
+
+    const distinctInstruments = await Promise.all(
+      [...distinctFigiSet].map((figi: string) =>
+        this.getInstrumentByFigi(figi),
+      ),
+    );
+
+    return distinctInstruments.sort((a, b) => sortByKeyASC(a, b, 'ticker'));
+  };
+
+  private joinFigiInfo = async (
+    operation: Operation,
+  ): Promise<Operation & { tickerInfo: MarketInstrument }> => {
+    if (!operation || !operation.figi) {
+      return {
+        ...operation,
+        tickerInfo: null,
+      };
+    }
+
+    return {
+      ...operation,
+      tickerInfo: await this.getInstrumentByFigi(operation.figi),
     };
   };
 
