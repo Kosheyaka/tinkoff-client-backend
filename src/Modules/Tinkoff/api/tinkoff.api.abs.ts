@@ -1,6 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 import { app } from '../../../main';
-import { UserAccountsResponse } from '@tinkoff/invest-openapi-js-sdk';
+import {
+  MarketInstrumentResponse,
+  UserAccountsResponse,
+} from '@tinkoff/invest-openapi-js-sdk';
 import {
   CandlesResponse,
   MarketInstrumentListResponse,
@@ -98,13 +101,13 @@ export abstract class TinkoffApiAbstract {
 
   public marketSearchByFigi = async (
     figi: string,
-  ): Promise<MarketInstrumentListResponse> => {
+  ): Promise<MarketInstrumentResponse> => {
     const { data } = await this.api.get('/market/search/by-figi', {
       params: {
         figi: figi.toUpperCase(),
       },
     });
-    return data as MarketInstrumentListResponse;
+    return data as MarketInstrumentResponse;
   };
 
   public marketSearchByTicker = async (
