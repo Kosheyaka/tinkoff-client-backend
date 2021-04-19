@@ -8,6 +8,7 @@ import {
   UserAccount,
 } from '@tinkoff/invest-openapi-js-sdk';
 import { launchDate } from './tinkoff.const';
+import { CacheTTL } from 'src/Utils/const';
 
 @Injectable()
 export class TinkoffService {
@@ -139,7 +140,7 @@ export class TinkoffService {
     } = await this.api.marketCandles({ figi, interval: 'hour', from, to });
     const lastCandle = candles[candles.length - 1];
 
-    await this.cache.setGlobal<number>(cacheKey, lastCandle.c, 1000 * 60);
+    await this.cache.setGlobal<number>(cacheKey, lastCandle.c, CacheTTL.min);
     return lastCandle.c;
   };
 
