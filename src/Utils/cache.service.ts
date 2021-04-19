@@ -25,17 +25,17 @@ export class CacheService {
     }
   }
 
-  public async setGlobal<T>(key: string, value: T, ttl = 300): Promise<T> {
-    return this.cacheManager.set(key, value, ttl * 1000);
+  public async setGlobal<T>(key: string, value: T, ttl = null): Promise<T> {
+    return this.cacheManager.set(key, value, ttl);
   }
 
   public async setForUser<T>(
     key: string,
     value: T,
     userId: number,
-    ttl = 5,
+    ttl = null,
   ): Promise<T> {
-    return this.cacheManager.set(this.userKey(key, userId), value, ttl * 1000);
+    return this.cacheManager.set(this.userKey(key, userId), value, ttl);
   }
 
   public async delete(key: string) {

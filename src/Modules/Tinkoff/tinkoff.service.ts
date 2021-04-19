@@ -139,7 +139,7 @@ export class TinkoffService {
     } = await this.api.marketCandles({ figi, interval: 'hour', from, to });
     const lastCandle = candles[candles.length - 1];
 
-    await this.cache.setGlobal<number>(cacheKey, lastCandle.c, 10);
+    await this.cache.setGlobal<number>(cacheKey, lastCandle.c, 1000 * 60);
     return lastCandle.c;
   };
 
