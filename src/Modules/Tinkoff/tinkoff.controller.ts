@@ -15,6 +15,10 @@ export class TinkoffController {
   async overview() {
     // const allTransactions = await this.service.getAllOperations();
     // return this.service.getDistinctOperationTypes(allTransactions);
+
+    return {
+      workInProgress: true,
+    };
   }
 
   @Get('statisticsByTicker')
@@ -26,7 +30,9 @@ export class TinkoffController {
       );
     }
 
-    return {};
+    return {
+      workInProgress: true,
+    };
   }
 
   @Get('tickerPrice')
