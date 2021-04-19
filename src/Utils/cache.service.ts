@@ -9,7 +9,7 @@ export class CacheService {
 
   private userKey = (key: string, userId: number) => `${userId}_${key}`;
 
-  public getGlobal<T>(key: string): Promise<T | null> {
+  public async getGlobal<T>(key: string): Promise<T | null> {
     try {
       return this.cacheManager.get(key);
     } catch (e) {
@@ -17,7 +17,7 @@ export class CacheService {
     }
   }
 
-  public getForUser<T>(key: string, userId: number): Promise<T | null> {
+  public async getForUser<T>(key: string, userId: number): Promise<T | null> {
     try {
       return this.cacheManager.get(this.userKey(key, userId));
     } catch (e) {
@@ -25,7 +25,7 @@ export class CacheService {
     }
   }
 
-  public async setGlobal<T>(key: string, value: T, ttl = 5): Promise<T> {
+  public async setGlobal<T>(key: string, value: T, ttl = 300): Promise<T> {
     return this.cacheManager.set(key, value, ttl * 1000);
   }
 

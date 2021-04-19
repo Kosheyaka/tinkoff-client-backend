@@ -1,43 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { TinkoffApi } from './api/tinkoff.api';
-import { TinkoffSandboxApi } from './api/tinkoffSandbox.api';
-import { TinkoffApiAbstract } from './api/tinkoff.api.abs';
+import { CacheService } from '../../Utils/cache.service';
 import {
   MarketInstrument,
   Operation,
   OperationTypeWithCommission,
+  UserAccount,
 } from '@tinkoff/invest-openapi-js-sdk';
 import { launchDate } from './tinkoff.const';
 
 @Injectable()
 export class TinkoffService {
   constructor(
-    private realApi: TinkoffApi,
-    private sandBoxApi: TinkoffSandboxApi,
-  ) {
-    this.api = this.realApi;
-  }
-
-  private api: TinkoffApiAbstract;
-
-  /**
-   * Включает/выключает режим песочницы
-   */
-  public sandboxMode = (flag: boolean): void => {
-    this.api = !flag ? this.realApi : this.sandBoxApi;
-  };
+    private readonly api: TinkoffApi,
+    private readonly cache: CacheService,
+  ) {}
 
   /**
    * Возвращает ID портфеля в системе брокера
-   * @todo Добавить возможность работать с 2 портфелями
    */
-  public getBrokerAccountId = async (): Promise<string> => {
+  public getBrokerAccounts = async (): Promise<UserAccount[]> => {
+    const cacheKey = 'TS.getBrokerAccounts';
+    const cache = await this.cache.getGlobal<UserAccount[]>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
     const {
       payload: { accounts },
     } = await this.api.userAccounts();
-    const { brokerAccountId } = accounts[0];
 
-    return brokerAccountId;
+    await this.cache.setGlobal<UserAccount[]>(cacheKey, accounts);
+    return accounts;
   };
 
   /**
@@ -46,19 +40,30 @@ export class TinkoffService {
   public getInstrumentByTicker = async (
     ticker: string,
   ): Promise<MarketInstrument> => {
+    const cacheKey = `TS.getInstrumentByTicker.${ticker}`;
+    const cache = await this.cache.getGlobal<MarketInstrument>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
     const {
       payload: { instruments },
     } = await this.api.marketSearchByTicker(ticker);
 
+    await this.cache.setGlobal<MarketInstrument>(cacheKey, instruments[0]);
     return instruments[0];
   };
 
   /**
    * Получить историю транзакций по определенному инструменту
    */
-  public getTransactionsHistoryByFigi = async (
-    figi: string,
-  ): Promise<Operation[]> => {
+  public getOperationsByFigi = async (figi: string): Promise<Operation[]> => {
+    const cacheKey = `TS.getOperationsByFigi.${figi}`;
+    const cache = await this.cache.getGlobal<Operation[]>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
     const operationsResponse = await this.api.operations({
       from: launchDate.toISOString(),
       to: new Date().toISOString(),
@@ -68,13 +73,20 @@ export class TinkoffService {
       payload: { operations },
     } = operationsResponse;
 
+    await this.cache.setGlobal<Operation[]>(cacheKey, operations);
     return operations;
   };
 
   /**
    * Получить полную историю транзакций (с 2015 года)
    */
-  public getTransactionsHistoryFull = async (): Promise<Operation[]> => {
+  public getAllOperations = async (): Promise<Operation[]> => {
+    const cacheKey = 'TS.getAllOperations';
+    const cache = await this.cache.getGlobal<Operation[]>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
     const operationsResponse = await this.api.operations({
       from: launchDate.toISOString(),
       to: new Date().toISOString(),
@@ -83,6 +95,7 @@ export class TinkoffService {
       payload: { operations },
     } = operationsResponse;
 
+    await this.cache.setGlobal<Operation[]>(cacheKey, operations);
     return operations;
   };
 
@@ -90,6 +103,12 @@ export class TinkoffService {
    * Количество единиц инструмента в портфеле
    */
   public getTickerAmount = async (ticker: string): Promise<number> => {
+    const cacheKey = `TS.getTickerAmount.${ticker}`;
+    const cache = await this.cache.getGlobal<number>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
     const {
       payload: { positions },
     } = await this.api.portfolio();
@@ -97,24 +116,30 @@ export class TinkoffService {
       (pos) => pos.ticker === ticker.toUpperCase(),
     );
 
-    return position ? position.lots : 0;
+    const amount: number = position ? position.lots : 0;
+    await this.cache.setGlobal<number>(cacheKey, amount);
+    return amount;
   };
 
   /**
    * Последняя цена инструмента
    */
   public getTickerActualPrice = async (figi: string): Promise<number> => {
-    const dateFrom = new Date();
-    dateFrom.setDate(dateFrom.getDate() - 7);
-    const dateTo = new Date();
-    const from = dateFrom.toISOString();
-    const to = dateTo.toISOString();
+    const cacheKey = `TS.getTickerActualPrice.${figi}`;
+    const cache = await this.cache.getGlobal<number>(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
+    const from = this.sevenDaysAgo().toISOString();
+    const to = new Date().toISOString();
 
     const {
       payload: { candles },
     } = await this.api.marketCandles({ figi, interval: 'hour', from, to });
     const lastCandle = candles[candles.length - 1];
 
+    await this.cache.setGlobal<number>(cacheKey, lastCandle.c, 10);
     return lastCandle.c;
   };
 
@@ -132,5 +157,12 @@ export class TinkoffService {
     return {
       operationTypes,
     };
+  };
+
+  private sevenDaysAgo = (): Date => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+
+    return date;
   };
 }
