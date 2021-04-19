@@ -11,9 +11,11 @@ export class TinkoffController {
     return this.service.getBrokerAccounts();
   }
 
-  @Get('usedTickers')
-  async usedTickers() {
-    // const allTransactions = await this.service.getAllOperations();
+  @Get('usedInstruments')
+  async usedInstruments() {
+    const operations = await this.service.getAllOperations();
+
+    return this.service.getUsedInstruments(operations);
   }
 
   @Get('overview')
