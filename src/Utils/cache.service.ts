@@ -1,6 +1,6 @@
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER, Inject } from '@nestjs/common';
-import md5 from 'md5';
+import * as md5 from 'md5';
 
 export class CacheService {
   constructor(
